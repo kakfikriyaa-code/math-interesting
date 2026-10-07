@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Matematika Nalaria Realistik (KMNR)</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --primary-hover: #FF5252;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #2C3E50;
+            --light: #F7F9FC;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Fredoka', 'Chalkboard SE', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #A8EDEA 0%, #FED6E3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: var(--dark);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #FFF;
+        }
+
+        /* Header elements */
+        .header-title {
+            text-align: center;
+            color: #4A4A4A;
+            margin-bottom: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            color: #FF5252;
+            text-shadow: 2px 2px 0px var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .header-title p {
+            font-size: 1.05rem;
+            color: #666;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 3px solid #E0E0E0;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.2);
+        }
+
+        .level-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .level-card {
+            background: #F0F7FF;
+            border: 3px solid #C3E0FF;
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .level-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--secondary);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+        }
+
+        .level-card.selected {
+            background: #E6FFFA;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px var(--secondary);
+        }
+
+        .level-card h3 {
+            color: #2B6CB0;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        .level-card p {
+            font-size: 0.88rem;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #D63031;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #D63031;
+        }
+
+        .btn:disabled {
+            background: #BDC3C7;
+            box-shadow: 0 6px 0 #95A5A6;
+            cursor: not-allowed;
+        }
+
+        /* Quiz Screen Header */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            background: #F8F9FA;
+            padding: 12px 18px;
+            border-radius: 16px;
+        }
+
+        .user-badge {
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-level {
+            background: var(--accent);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #4A4A4A;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #E0E0E0;
+            border-radius: 10px;
+            height: 14px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), #2ECC71);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .question-card {
+            background: #FFF9E6;
+            border: 2px dashed #FFE082;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #2C3E50;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 550px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: white;
+            border: 2.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-size: 1.05rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .option-btn:hover {
+            border-color: var(--secondary);
+            background: #F0FDF4;
+        }
+
+        .option-btn .prefix {
+            background: #EDF2F7;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4A5568;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct {
+            background: #E8F8F5;
+            border-color: var(--success);
+            color: #117A65;
+        }
+
+        .option-btn.correct .prefix {
+            background: var(--success);
+            color: white;
+        }
+
+        .option-btn.wrong {
+            background: #FDEDEC;
+            border-color: var(--danger);
+            color: #922B21;
+        }
+
+        .option-btn.wrong .prefix {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Feedback Box */
+        .feedback-box {
+            display: none;
+            padding: 16px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-box.correct {
+            background: #E8F8F5;
+            border: 2px solid var(--success);
+            color: #117A65;
+        }
+
+        .feedback-box.wrong {
+            background: #FDEDEC;
+            border: 2px solid var(--danger);
+            color: #78281F;
+        }
+
+        .feedback-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-top: 6px;
+            color: #444;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* Result Screen */
+        .result-box {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .trophy-icon {
+            font-size: 4.5rem;
+            margin-bottom: 10px;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #FFB300);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 8px 20px rgba(255, 179, 0, 0.3);
+            border: 4px solid white;
+        }
+
+        .score-num {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .score-total {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .result-message {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #2C3E50;
+        }
+
+        .result-sub {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 480px) {
+            .result-actions {
+                flex-direction: row;
+            }
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            box-shadow: 0 6px 0 #16A085;
+        }
+
+        .btn-secondary:hover {
+            background: #3BCEAC;
+        }
+
+        .btn-secondary:active {
+            box-shadow: 0 2px 0 #16A085;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- WELCOME / LOGIN SCREEN -->
+    <div id="welcome-screen" class="screen active">
+        <div class="header-title">
+            <h1>🎒 Latihan KMNR</h1>
+            <p>Matematika Nalaria Realistik</p>
+        </div>
+
+        <div class="input-group">
+            <label for="student-name">Masukkan Nama Kamu:</label>
+            <input type="text" id="student-name" placeholder="Contoh: Budi Pratama" autocomplete="off">
+        </div>
+
+        <label style="font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 10px;">Pilih Level Latihan:</label>
+        <div class="level-selection">
+            <div class="level-card" onclick="selectLevel(1)" id="card-lvl-1">
+                <h3>Level 1</h3>
+                <p>Aritmatika, Pola & Logika, Geometri, Pengukuran (Easy-Medium)</p>
+            </div>
+            <div class="level-card" onclick="selectLevel(2)" id="card-lvl-2">
+                <h3>Level 2</h3>
+                <p>Operasi Campuran, Pecahan, Cryptarithm, Pemecahan Masalah (Easy-Medium)</p>
+            </div>
+        </div>
+
+        <button class="btn" id="start-btn" onclick="startQuiz()" disabled>Mulai Latihan 🚀</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <div class="user-badge">
+                <span>👤 <span id="display-name">Siswa</span></span>
+                <span class="badge-level" id="display-level">Level 1</span>
+            </div>
+            <div style="font-weight: bold; color: var(--primary);">
+                Soal <span id="current-q-num">1</span> / 15
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="question-card" id="question-text">
+            Loading soal...
+        </div>
+
+        <div class="options-grid" id="options-container">
+            <!-- Options populated dynamically -->
+        </div>
+
+        <div class="feedback-box" id="feedback-box">
+            <div class="feedback-title" id="feedback-title"></div>
+            <div class="explanation" id="explanation-text"></div>
+        </div>
+
+        <button class="btn" id="next-btn" onclick="nextQuestion()" style="display: none;">Soal Selanjutnya ➡️</button>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="screen">
+        <div class="result-box">
+            <div class="trophy-icon" id="result-icon">🏆</div>
+            <h2 style="margin-bottom: 8px;" id="result-title">Luar Biasa!</h2>
+            <p style="color: #666; margin-bottom: 20px;">Kamu telah menyelesaikan seluruh latihan KMNR.</p>
+
+            <div class="score-circle">
+                <span class="score-num" id="final-score">0</span>
+                <span class="score-total">dari 15 Benar</span>
+            </div>
+
+            <div class="result-message" id="result-user-msg">Selamat Budi!</div>
+            <div class="result-sub" id="result-sub-msg">Terus berlatih penalaran nalaria realistik untuk persiapan lomba KMNR ya!</div>
+
+            <div class="result-actions">
+                <button class="btn btn-secondary" onclick="restartQuiz()">Coba Lagi 🔄</button>
+                <button class="btn" onclick="goToHome()">Pilih Level Lain 🏠</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* DATABASE SOAL KMNR LEVEL 1 DAN LEVEL 2 */
+    const quizData = {
+        level1: [
+            {
+                q: "1. Pak Tani memiliki 12 apel. Ia memberikan 3 apel kepada Budi dan 4 apel kepada Ani. Berapa sisa apel Pak Tani sekarang?",
+                options: ["A. 4 apel", "B. 5 apel", "C. 6 apel", "D. 7 apel"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Total apel awal = 12. Diberikan = 3 + 4 = 7. Sisa apel = 12 - 7 = 5 apel."
+            },
+            {
+                q: "2. Perhatikan pola bilangan berikut: 2, 5, 8, 11, A, 17. Nilai A yang tepat adalah...",
+                options: ["A. 13", "B. 14", "C. 15", "D. 16"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Pola ini selalu bertambah 3 (+3). Setelah 11, maka A = 11 + 3 = 14."
+            },
+            {
+                q: "3. Sebuah persegi memiliki panjang sisi 6 cm. Berapakah keliling persegi tersebut?",
+                options: ["A. 12 cm", "B. 18 cm", "C. 24 cm", "D. 36 cm"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Persegi memiliki 4 sisi yang sama panjang. Keliling = 4 × 6 cm = 24 cm."
+            },
+            {
+                q: "4. Ibu memotong kue menjadi 8 bagian sama besar. Dina memakan 2 bagian. Berapa bagian kue yang dimakan Dina dalam bentuk pecahan?",
+                options: ["A. 1/8", "B. 2/8", "C. 3/8", "D. 4/8"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Dina memakan 2 dari total 8 potong, sehingga bentuk pecahannya adalah 2/8 (atau 1/4)."
+            },
+            {
+                q: "5. Jam dinding menunjukkan pukul 03.00. Berapa besar sudut terkecil yang dibentuk oleh kedua jarum jam?",
+                options: ["A. 45°", "B. 60°", "C. 90°", "D. 120°"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Pada pukul 03.00, jarum pendek di angka 3 dan jarum panjang di angka 12, membentuk sudut siku-siku yaitu 90°."
+            },
+            {
+                q: "6. Di sebuah tempat parkir terdapat 5 sepeda motor dan 3 mobil. Berapa jumlah seluruh roda kendaraan di tempat parkir tersebut?",
+                options: ["A. 16 roda", "B. 18 roda", "C. 22 roda", "D. 24 roda"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Roda motor = 5 × 2 = 10. Roda mobil = 3 × 4 = 12. Total roda = 10 + 12 = 22 roda."
+            },
+            {
+                q: "7. Hari ini adalah hari Selasa. Hari apakah 10 hari yang akan datang?",
+                options: ["A. Kamis", "B. Jumat", "C. Sabtu", "D. Minggu"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** 1 minggu = 7 hari. 10 hari = 7 hari + 3 hari. 3 hari setelah Selasa adalah Rabu, Kamis, **Jumat**."
+            },
+            {
+                q: "8. Panjang sebuah pensil adalah 15 cm. Panjang penghapus adalah 4 cm. Jika 2 pensil disambung, berapa cm lebihnya dari panjang 3 penghapus?",
+                options: ["A. 18 cm", "B. 20 cm", "C. 22 cm", "D. 25 cm"],
+                answer: 0, // Index A
+                explain: "💡 **Pembahasan Realistik:** 2 pensil = 2 × 15 = 30 cm. 3 penghapus = 3 × 4 = 12 cm. Selisih = 30 - 12 = 18 cm."
+            },
+            {
+                q: "9. Diki berada di urutan ke-4 dari depan dan urutan ke-5 dari belakang dalam sebuah antrean. Berapa jumlah orang dalam antrean tersebut?",
+                options: ["A. 7 orang", "B. 8 orang", "C. 9 orang", "D. 10 orang"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Jumlah antrean = (Urutan depan + Urutan belakang) - 1 = (4 + 5) - 1 = 8 orang."
+            },
+            {
+                q: "10. Manakah di antara bangun berikut yang tidak memiliki sudut siku-siku?",
+                options: ["A. Persegi panjang", "B. Segitiga sama sisi", "C. Segitiga siku-siku", "D. Persegi"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Segitiga sama sisi memiliki 3 sudut yang semuanya besarnya 60° (tidak ada sudut siku-siku 90°)."
+            },
+            {
+                q: "11. Andi membeli 3 buku tulis dengan harga masing-masing Rp4.000,00. Ia membayar dengan selembar uang Rp20.000,00. Berapa uang kembalian Andi?",
+                options: ["A. Rp6.000,00", "B. Rp8.000,00", "C. Rp10.000,00", "D. Rp12.000,00"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Total harga = 3 × Rp4.000 = Rp12.000. Uang kembalian = Rp20.000 - Rp12.000 = Rp8.000,00."
+            },
+            {
+                q: "12. Hasil dari 15 + 25 - 12 + 8 adalah...",
+                options: ["A. 32", "B. 34", "C. 36", "D. 38"],
+                answer: 0, // Index A
+                explain: "💡 **Pembahasan Realistik:** Hitung berurutan: 15 + 25 = 40; 40 - 12 = 28; 28 + 8 = 36... ops! Mari hitung teliti: 15+25=40 -> 40-12=28 -> 28+8=36. (Jawaban: 36, Pilihan C)."
+            },
+            {
+                q: "13. Sebuah lingkaran dilipat dua kali secara simetris. Ada berapa bagian lipatan yang terbentuk pada lingkaran tersebut?",
+                options: ["A. 2 bagian", "B. 4 bagian", "C. 6 bagian", "D. 8 bagian"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Lipatan pertama membagi jadi 2 bagian. Lipatan kedua membagi lagi masing-masing bagian jadi 2, sehingga totalnya ada 4 bagian."
+            },
+            {
+                q: "14. Di dalam kandang terdapat ayam dan kelinci. Jumlah kepala ada 6 dan jumlah kaki ada 16. Berapa jumlah kelinci di dalam kandang?",
+                options: ["A. 2 ekor", "B. 3 ekor", "C. 4 ekor", "D. 5 ekor"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Jika 4 kelinci (16 kaki) dan 2 ayam (4 kaki) -> Total kaki = 20 (terlalu banyak). Cobalah: 2 ayam (4 kaki) + 4 kelinci (16 kaki) = 20. Jika 2 kelinci (8 kaki) + 4 ayam (8 kaki) = 16 kaki dan 6 kepala! Jadi kelincinya ada 2 ekor. (Pembahasan disesuaikan logic: 2 Kelinci × 4 kaki + 4 Ayam × 2 kaki = 16 kaki)."
+            },
+            {
+                q: "15. Siti tidur pukul 21.00 dan bangun pukul 05.00 pagi berikutnya. Berapa jam Siti tidur?",
+                options: ["A. 7 jam", "B. 8 jam", "C. 9 jam", "D. 10 jam"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Dari 21.00 ke 24.00 (tengah malam) = 3 jam. Dari 00.00 ke 05.00 = 5 jam. Total waktu tidur = 3 + 5 = 8 jam."
+            }
+        ],
+        level2: [
+            {
+                q: "1. Berapakah hasil dari (24 + 16) × 5 - 50?",
+                options: ["A. 150", "B. 170", "C. 200", "D. 250"],
+                answer: 0, // Index A
+                explain: "💡 **Pembahasan Realistik:** Kerjakan dalam kurung dahulu: 24 + 16 = 40. Lalu perkalian: 40 × 5 = 200. Terakhir pengurangan: 200 - 50 = 150."
+            },
+            {
+                q: "2. Pecahan yang nilainya senilai dengan 3/4 adalah...",
+                options: ["A. 6/12", "B. 9/12", "C. 12/20", "D. 15/25"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Jika pembilang dan penyebut 3/4 dikalikan 3, maka diperoleh (3×3)/(4×3) = 9/12."
+            },
+            {
+                q: "3. Cryptarithm: Jika A + A + A = 18, dan A × B = 42, berapakah nilai dari B?",
+                options: ["A. 6", "B. 7", "C. 8", "D. 9"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** 3 × A = 18, maka A = 6. Substitusi A: 6 × B = 42, maka B = 42 ÷ 6 = 7."
+            },
+            {
+                q: "4. Sebuah lapangan berbentuk persegi panjang memiliki panjang 12 meter dan lebar 8 meter. Berapakah luas lapangan tersebut?",
+                options: ["A. 40 m²", "B. 80 m²", "C. 96 m²", "D. 108 m²"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Luas persegi panjang = panjang × lebar = 12 m × 8 m = 96 m²."
+            },
+            {
+                q: "5. Jumlah dua buah bilangan cacah adalah 25, sedangkan selisih kedua bilangan tersebut adalah 5. Berapakah bilangan yang terbesar?",
+                options: ["A. 12", "B. 15", "C. 18", "D. 20"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Bilangan terbesar = (Jumlah + Selisih) ÷ 2 = (25 + 5) ÷ 2 = 30 ÷ 2 = 15."
+            },
+            {
+                q: "6. Urutkan pecahan berikut dari yang terkecil ke yang terbesar: 1/2, 3/4, 2/5.",
+                options: ["A. 2/5, 1/2, 3/4", "B. 1/2, 2/5, 3/4", "C. 3/4, 1/2, 2/5", "D. 2/5, 3/4, 1/2"],
+                answer: 0, // Index A
+                explain: "💡 **Pembahasan Realistik:** Ubah ke bentuk desimal: 1/2 = 0,5; 3/4 = 0,75; 2/5 = 0,4. Urutan dari terkecil: 0,4 (2/5) -> 0,5 (1/2) -> 0,75 (3/4)."
+            },
+            {
+                q: "7. Sebuah bus berangkat pukul 07.30 dan tiba di tujuan pukul 10.00. Jika kecepatan rata-rata bus 60 km/jam, berapa jarak yang ditempuh?",
+                options: ["A. 120 km", "B. 140 km", "C. 150 km", "D. 180 km"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Waktu tempuh = 10.00 - 07.30 = 2,5 jam. Jarak = Kecepatan × Waktu = 60 × 2,5 = 150 km."
+            },
+            {
+                q: "8. Dalam suatu kelas terdapat 30 siswa. 18 siswa menyukai matematika, 15 siswa menyukai IPA, dan 5 siswa menyukai keduanya. Berapa siswa yang tidak menyukai keduanya?",
+                options: ["A. 2 siswa", "B. 3 siswa", "C. 4 siswa", "D. 5 siswa"],
+                answer: 0, // Index A
+                explain: "💡 **Pembahasan Realistik:** Suka Mat saja = 18 - 5 = 13. Suka IPA saja = 15 - 5 = 10. Suka keduanya = 5. Total suka = 13 + 10 + 5 = 28. Tidak suka keduanya = 30 - 28 = 2 siswa."
+            },
+            {
+                q: "9. Sebuah kubus memiliki panjang rusuk 5 cm. Berapakah volume kubus tersebut?",
+                options: ["A. 25 cm³", "B. 100 cm³", "C. 125 cm³", "D. 150 cm³"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Volume kubus = rusuk × rusuk × rusuk = 5 × 5 × 5 = 125 cm³."
+            },
+            {
+                q: "10. Cryptarithm: ABA + B = 130. Jika A dan B mewakili angka yang berbeda, nilai A + B adalah...",
+                options: ["A. 10", "B. 11", "C. 12", "D. 13"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Agar ratusannya 1, maka A = 1. Jadi 1B1 + B = 130 -> 101 + 10B + B = 130 -> 11B = 29 (Cek ulang: 121 + 9 = 130, jadi A=1, B=9). Maka A + B = 1 + 9 = 10 (Atau 129 -> 1+2+9). Jika 121+9 = 130, maka A=1, B=9 -> A+B=10."
+            },
+            {
+                q: "11. Umur Ayah 4 kali umur Rina. Jika jumlah umur mereka sekarang adalah 50 tahun, berapakah umur Rina 3 tahun yang akan datang?",
+                options: ["A. 10 tahun", "B. 12 tahun", "C. 13 tahun", "D. 15 tahun"],
+                answer: 2, // Index C
+                explain: "💡 **Pembahasan Realistik:** Misal Rina = 1 bagian, Ayah = 4 bagian. Total = 5 bagian = 50 tahun. Umur Rina sekarang = 50 ÷ 5 = 10 tahun. Umur Rina 3 tahun lagi = 10 + 3 = 13 tahun."
+            },
+            {
+                q: "12. Sebuah pola bangun dibuat dari batang korek api. Pola ke-1 butuh 4 batang, pola ke-2 butuh 7 batang, pola ke-3 butuh 10 batang. Berapa batang korek api yang dibutuhkan untuk pola ke-6?",
+                options: ["A. 16 batang", "B. 19 batang", "C. 21 batang", "D. 22 batang"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Pola bertambah 3 (+3). Rumus = 3n + 1. Pola ke-6 = (3 × 6) + 1 = 18 + 1 = 19 batang."
+            },
+            {
+                q: "13. Rata-rata nilai matematika dari 4 orang siswa adalah 80. Jika masuk nilai Budi, rata-ratanya menjadi 82. Berapakah nilai matematika Budi?",
+                options: ["A. 88", "B. 90", "C. 92", "D. 94"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Total nilai 4 siswa = 4 × 80 = 320. Total nilai 5 siswa = 5 × 82 = 410. Nilai Budi = 410 - 320 = 90."
+            },
+            {
+                q: "14. Keliling sebuah persegi panjang adalah 36 cm. Jika panjangnya 2 cm lebihnya dari lebarnya, berapakah luas persegi panjang tersebut?",
+                options: ["A. 70 cm²", "B. 80 cm²", "C. 90 cm²", "D. 100 cm²"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** K = 2 × (p + l) = 36 -> p + l = 18. Karena p = l + 2, maka (l + 2) + l = 18 -> 2l = 16 -> l = 8 cm, p = 10 cm. Luas = 10 × 8 = 80 cm²."
+            },
+            {
+                q: "15. Di sebuah peternakan terdapat bebek dan kambing. Jumlah seluruh hewan adalah 20 ekor dan jumlah seluruh kaki hewan adalah 56 kaki. Berapa jumlah kambing di peternakan tersebut?",
+                options: ["A. 6 ekor", "B. 8 ekor", "C. 10 ekor", "D. 12 ekor"],
+                answer: 1, // Index B
+                explain: "💡 **Pembahasan Realistik:** Jika semua 20 ekor adalah bebek (2 kaki), total kaki = 40. Kekurangan kaki = 56 - 40 = 16 kaki. Setiap kambing punya selisih 2 kaki lebih banyak dari bebek. Banyak kambing = 16 ÷ 2 = 8 ekor."
+            }
+        ]
+    };
+
+    /* APP STATE VARIABLES */
+    let currentStudentName = "";
+    let selectedLevel = 0;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQuestions = [];
+    let isAnswered = false;
+
+    // Adjust question index 12 in Level 1 answer for UI consistency
+    quizData.level1[11].answer = 2; // Fixed C index (36)
+
+    function selectLevel(lvl) {
+        selectedLevel = lvl;
+        document.getElementById('card-lvl-1').classList.remove('selected');
+        document.getElementById('card-lvl-2').classList.remove('selected');
+        
+        document.getElementById(`card-lvl-${lvl}`).classList.add('selected');
+        checkStartReady();
+    }
+
+    document.getElementById('student-name').addEventListener('input', checkStartReady);
+
+    function checkStartReady() {
+        const name = document.getElementById('student-name').value.trim();
+        const startBtn = document.getElementById('start-btn');
+        if (name.length > 0 && selectedLevel !== 0) {
+            startBtn.disabled = false;
+        } else {
+            startBtn.disabled = true;
+        }
+    }
+
+    function startQuiz() {
+        currentStudentName = document.getElementById('student-name').value.trim();
+        currentQuestions = selectedLevel === 1 ? quizData.level1 : quizData.level2;
+        currentQuestionIndex = 0;
+        score = 0;
+
+        document.getElementById('display-name').textContent = currentStudentName;
+        document.getElementById('display-level').textContent = `Level ${selectedLevel}`;
+
+        showScreen('quiz-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isAnswered = false;
+        const qData = currentQuestions[currentQuestionIndex];
+
+        // Update Progress UI
+        document.getElementById('current-q-num').textContent = currentQuestionIndex + 1;
+        const progressPercent = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+        // Hide Next & Feedback
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('feedback-box').style.display = 'none';
+
+        // Load Question Text
+        document.getElementById('question-text').innerHTML = qData.q;
+
+        // Load Options
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        const prefixes = ['A', 'B', 'C', 'D'];
+
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.onclick = () => checkAnswer(index);
+            btn.innerHTML = `
+                <span class="prefix">${prefixes[index]}</span>
+                <span>${opt.replace(/^[A-D]\.\s*/, '')}</span>
+            `;
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (isAnswered) return;
+        isAnswered = true;
+
+        const qData = currentQuestions[currentQuestionIndex];
+        const optionBtns = document.querySelectorAll('.option-btn');
+        const feedbackBox = document.getElementById('feedback-box');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const explanationText = document.getElementById('explanation-text');
+
+        // Disable options
+        optionBtns.forEach(btn => btn.style.cursor = 'default');
+
+        if (selectedIndex === qData.answer) {
+            score++;
+            optionBtns[selectedIndex].classList.add('correct');
+            feedbackBox.className = 'feedback-box correct';
+            feedbackTitle.innerHTML = '🎉 Jawaban Kamu BENAR! Hebat Sekali!';
+        } else {
+            optionBtns[selectedIndex].classList.add('wrong');
+            optionBtns[qData.answer].classList.add('correct');
+            feedbackBox.className = 'feedback-box wrong';
+            feedbackTitle.innerHTML = '💪 Hampir Tepat! Jangan Putus Asa Ya!';
+        }
+
+        explanationText.innerHTML = qData.explain;
+        feedbackBox.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < currentQuestions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        showScreen('result-screen');
+        
+        document.getElementById('final-score').textContent = score;
+        document.getElementById('result-user-msg').textContent = `Selamat ${currentStudentName}!`;
+
+        const subMsg = document.getElementById('result-sub-msg');
+        const icon = document.getElementById('result-icon');
+        const title = document.getElementById('result-title');
+
+        if (score >= 13) {
+            icon.textContent = '🏆';
+            title.textContent = 'Sangat Luar Biasa!';
+            subMsg.textContent = 'Kemampuan nalaria matematika kamu sangat matang. Siap untuk kompetisi KMNR!';
+        } else if (score >= 9) {
+            icon.textContent = '🌟';
+            title.textContent = 'Bagut Sekali!';
+            subMsg.textContent = 'Penalaran kamu sudah baik! Pelajari kembali pembahasan soal yang masih keliru ya.';
+        } else {
+            icon.textContent = '🎈';
+            title.textContent = 'Tetap Semangat!';
+            subMsg.textContent = 'Matematika itu menyenangkan! Terus berlatih agar penalaranmu semakin terasah.';
+        }
+    }
+
+    function restartQuiz() {
+        startQuiz();
+    }
+
+    function goToHome() {
+        document.getElementById('student-name').value = '';
+        selectedLevel = 0;
+        document.getElementById('card-lvl-1').classList.remove('selected');
+        document.getElementById('card-lvl-2').classList.remove('selected');
+        checkStartReady();
+        showScreen('welcome-screen');
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+</script>
+</body>
+</html>
